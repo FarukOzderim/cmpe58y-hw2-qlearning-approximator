@@ -17,6 +17,7 @@ thetas=np.array([[np.random.random()*1,np.random.random()*1,np.random.random()*1
 #ALPHA=0.01
 #epsilon=0.01
 gama=0.999
+beta=0.5
 
 #Epsilon starts with 1 and drops to with time
 def chooseEpsilon(time):
@@ -24,7 +25,7 @@ def chooseEpsilon(time):
 
 #Alpha is 0.01
 def chooseAlpha(time):
-    return 0.01
+    return 0.001
 
 #Choose random action with probabilty epsilon
 def chooseAction(epsilon,oldObservation):
@@ -36,23 +37,22 @@ def chooseAction(epsilon,oldObservation):
 def activationFunction(x):
 	return 1/(1+math.exp(-1*x))
 
-		
+thetasUpdate=np.zeros(10).reshape(2,5)
 #Update Model
 def updateModel(oldObservation,newObservation,action,reward,alpha):
-	thetasUpdate=np.array([0.0,0.0,0.0,0.0,0.0])
+	global thetasUpdate
 	oldOutput=outputOfModel(oldObservation)
 	newOutput=outputOfModel(newObservation)
 	for j in range(4):
-		thetasUpdate[j]+=-1*alpha*(oldObservation[j])*(oldOutput[action]-(reward+gama*np.max(newOutput)))
-	thetasUpdate[4]+=-1*alpha*(oldOutput[action]-(reward+gama*np.max(newOutput)))
+		thetasUpdate[action][j]=(1-beta)*(oldObservation[j])*(oldOutput[action]-(reward+gama*np.max(newOutput)))+beta*thetasUpdate[action][j]
+	thetasUpdate[action][4]=(1-beta)*(oldOutput[action]-(reward+gama*np.max(newOutput)))+beta*thetasUpdate[action][4]
 	
 	global thetas
 	for j in range(5):
-		thetas[action][j]+=(thetasUpdate[j])
+		thetas[action][j]-=alpha*(thetasUpdate[action][j])
 		if thetas[action][j]>0:
 			thetas[action][j]=min(100.0,thetas[action][j])
 		else:
-
 			thetas[action][j]=max(-100-.0,thetas[action][j])		
 
 
@@ -103,17 +103,17 @@ for time in range(numberOfEpisodes):
 		updateModel(oldObservation,newObservation,action,reward,alpha)
 
 		oldObservation=newObservation
+	#print(thetasUpdate)
 
 	plotData[time]=roundSurvival
 	print(time, "Round reward and epsilon is:",roundSurvival, epsilon)
 
 
+
 plt.plot(plotData)
 plt.show()
 
-
-
-#Test part after training
+####Test part after training
 
 print(thetas)
 average1=accumulatedReward/500
@@ -154,6 +154,7 @@ for survival in range(1000):
 
 #	plotData[time]=roundSurvival
 print(time, "Round reward and epsilon is:",roundSurvival, epsilon)
+
 
 
 
