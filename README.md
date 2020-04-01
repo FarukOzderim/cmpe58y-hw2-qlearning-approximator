@@ -4,7 +4,7 @@
 OpenAI Gym Cartpole Qlearning Approximation project.  
 https://gym.openai.com/envs/CartPole-v1/
 
-By FarukOzderim
+_By FarukOzderim_
 
 
 There are 2 versions, one with momentum 0.5, and one without momentum.
