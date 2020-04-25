@@ -1,5 +1,5 @@
 # cmpe58z-hw2-qlearning-approximator
-1-layer Qlearning approximator implementation for gym-cartpole 
+Robot Learning, 1-layer Qlearning approximator implementation for gym-cartpole 
 
 OpenAI Gym Cartpole Qlearning Approximation project.  
 https://gym.openai.com/envs/CartPole-v1/
